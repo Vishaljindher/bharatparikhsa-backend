@@ -27,7 +27,20 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors()); // Enable CORS
+// CORS FIX 🔥🔥🔥
+app.use(cors({
+  origin: [
+    "https://bharatparikhsa.online",
+    "https://bharatparikhsa.netlify.app"
+  ],
+  methods: "GET,POST,PUT,DELETE,PATCH,OPTIONS",
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+// Allow preflight requests
+app.options("*", cors());
+// Enable CORS
 app.use(express.json()); // Parse JSON requests
 
 // --- Default Route ---
