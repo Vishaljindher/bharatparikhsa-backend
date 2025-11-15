@@ -60,7 +60,7 @@ app.use("/api/test-types", testTypeRoutes);
 app.use("/api", extractionRoutes);
 app.use("/api/activity", userActivityRoutes);
 // --- AI Question Extraction Route ---
-app.post("/api/extract-questions", async (req, res) => {
+{/*app.post("/api/extract-questions", async (req, res) => {
   const { text } = req.body;
 
   if (!text) {
@@ -116,7 +116,7 @@ app.post("/api/extract-questions", async (req, res) => {
     console.error("💥 Backend fetch error:", err);
     res.status(500).json({ error: "❌ Failed to fetch from DeepSeek" });
   }
-});
+});*/}
 
 // --- Start Server ---
 const PORT = process.env.PORT || 5000;
