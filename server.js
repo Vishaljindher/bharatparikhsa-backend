@@ -53,7 +53,7 @@ app.use("/api/users", userRoutes); // 👤 User routes
 app.use("/api/tests", testRoutes); // 🧾 Regular test routes
 app.use("/api/publictests", createTestRoutes); // 🌐 Public test creation + fetching
 app.use("/api/questions", questionRoutes); // ❓ Question routes
-app.use("/api", extractionRoutes);
+
 app.use("/api/payment", paymentRoute);
 app.use("/api/flashcards", flashcardRoutes);
 app.use("/api/test-types", testTypeRoutes);
