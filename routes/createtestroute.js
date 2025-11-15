@@ -54,13 +54,13 @@ router.get("/all", protect, async (req, res) => {
 
 
 // 🟢 Get a single test by ID
-router.get("/:id", protect, getTestById);
+router.get("/test/:id", protect, getTestById);
 
 // 🟢 Update a test by ID (only for creator)
-router.put("/:id", protect, updateTest);
+router.put("/test/:id", protect, updateTest);
 
 // 🟢 Delete a test by ID (only for creator)
-router.delete("/:id", protect, deleteTest);
+router.delete("/test/:id", protect, deleteTest);
 
 // 🟢 Submit answers for a specific test
 router.post("/submit/:id", protect, async (req, res) => {
