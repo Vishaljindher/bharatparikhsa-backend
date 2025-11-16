@@ -57,7 +57,7 @@ app.use("/api/questions", questionRoutes); // ❓ Question routes
 app.use("/api/payment", paymentRoute);
 app.use("/api/flashcards", flashcardRoutes);
 app.use("/api/test-types", testTypeRoutes);
-app.use("/api", extractionRoutes);
+//app.use("/api", extractionRoutes);
 app.use("/api/activity", userActivityRoutes);
 // --- AI Question Extraction Route ---
 /*app.post("/api/extract-questions", async (req, res) => {
