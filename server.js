@@ -8,7 +8,7 @@ const userRoutes = require("./routes/userRoutes.js");
 const testRoutes = require("./routes/testRoutes.js");
 const questionRoutes = require("./routes/questionRoutes.js");
 const createTestRoutes = require("./routes/createtestroute.js");
-const extractionRoutes = require("./routes/extractionRoutes");
+//const extractionRoutes = require("./routes/extractionRoutes");
 const paymentRoute = require("./routes/paymentRoute.js");
 const flashcardRoutes = require("./routes/flashcardRoutes.js");
 const testTypeRoutes = require("./routes/testTypeRoutes.js");
@@ -30,6 +30,7 @@ const app = express();
 // CORS FIX 🔥🔥🔥
 app.use(cors({
   origin: [
+
     "https://bharatparikhsa.online",
     "https://bharatparikhsa.netlify.app"
   ],
