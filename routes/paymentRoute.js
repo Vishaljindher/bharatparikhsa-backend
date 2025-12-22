@@ -5,17 +5,30 @@ const crypto = require("crypto");
 
 const router = express.Router();
 
-// ✅ Create Razorpay instance
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID,
-  key_secret: process.env.RAZORPAY_KEY_SECRET,
-});
+// ✅ SAFE Razorpay initialization
+let razorpay = null;
 
-// ✅ Create order (fixed amount)
+if (process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET) {
+  razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_KEY_ID,
+    key_secret: process.env.RAZORPAY_KEY_SECRET,
+  });
+  console.log("✅ Razorpay initialized");
+} else {
+  console.warn("⚠️ Razorpay keys missing. Payment routes disabled.");
+}
+
+// ✅ Create order
 router.post("/create-order", async (req, res) => {
+  if (!razorpay) {
+    return res.status(503).json({
+      message: "Payment service unavailable",
+    });
+  }
+
   try {
     const options = {
-      amount: 100 * 100, // ₹100 (amount in paise)
+      amount: 100 * 100, // ₹100
       currency: "INR",
       receipt: `donation_${Date.now()}`,
     };
@@ -35,8 +48,18 @@ router.post("/create-order", async (req, res) => {
 
 // ✅ Verify payment signature
 router.post("/verify", (req, res) => {
+  if (!process.env.RAZORPAY_KEY_SECRET) {
+    return res.status(503).json({
+      message: "Payment verification unavailable",
+    });
+  }
+
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    } = req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSign = crypto
@@ -45,9 +68,15 @@ router.post("/verify", (req, res) => {
       .digest("hex");
 
     if (expectedSign === razorpay_signature) {
-      return res.json({ success: true, message: "✅ Payment verified successfully" });
+      return res.json({
+        success: true,
+        message: "✅ Payment verified successfully",
+      });
     } else {
-      return res.status(400).json({ success: false, message: "❌ Invalid signature" });
+      return res.status(400).json({
+        success: false,
+        message: "❌ Invalid signature",
+      });
     }
   } catch (err) {
     console.error("❌ Payment verification failed:", err);
