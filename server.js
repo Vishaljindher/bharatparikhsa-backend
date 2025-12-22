@@ -8,7 +8,7 @@ const userRoutes = require("./routes/userRoutes.js");
 const testRoutes = require("./routes/testRoutes.js");
 const questionRoutes = require("./routes/questionRoutes.js");
 const createTestRoutes = require("./routes/createtestroute.js");
-//const extractionRoutes = require("./routes/extractionRoutes");
+const extractionRoutes = require("./routes/extractionRoutes");
 const paymentRoute = require("./routes/paymentRoute.js");
 const flashcardRoutes = require("./routes/flashcardRoutes.js");
 const testTypeRoutes = require("./routes/testTypeRoutes.js");
@@ -28,9 +28,9 @@ const app = express();
 
 // Middleware
 // CORS FIX 🔥🔥🔥
-app.use(cors({
+/*app.use(cors({
   origin: [
-
+    "http://localhost:3000",
     "https://bharatparikhsa.online",
     "https://bharatparikhsa.netlify.app"
   ],
@@ -40,7 +40,48 @@ app.use(cors({
 }));
 
 // Allow preflight requests
-app.options("*", cors());
+app.options("*", cors());*/
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://bharatparikhsa.online",
+  "https://bharatparikhsa.netlify.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow Postman / server requests
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+// 🔥 EXTRA SAFETY (IMPORTANT)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", req.headers.origin);
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
+
 // Enable CORS
 app.use(express.json()); // Parse JSON requests
 
@@ -58,7 +99,7 @@ app.use("/api/questions", questionRoutes); // ❓ Question routes
 app.use("/api/payment", paymentRoute);
 app.use("/api/flashcards", flashcardRoutes);
 app.use("/api/test-types", testTypeRoutes);
-//app.use("/api", extractionRoutes);
+app.use("/api", extractionRoutes);
 app.use("/api/activity", userActivityRoutes);
 // --- AI Question Extraction Route ---
 /*app.post("/api/extract-questions", async (req, res) => {
@@ -117,8 +158,8 @@ app.use("/api/activity", userActivityRoutes);
     console.error("💥 Backend fetch error:", err);
     res.status(500).json({ error: "❌ Failed to fetch from DeepSeek" });
   }
-});*/
-
+});
+*/
 // --- Start Server ---
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
