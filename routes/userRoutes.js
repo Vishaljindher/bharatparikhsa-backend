@@ -1,3 +1,4 @@
+// my-backend/routes/userRoutes.js
 const express = require("express");
 const {
   registerUser,
@@ -6,7 +7,6 @@ const {
   resetPassword,
   saveProgress,
   getProgress,
-  verifyEmail,
   verifyOTP, // ✅ Add this line
 } = require("../controller/userController.js");
 
